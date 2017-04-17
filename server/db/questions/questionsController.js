@@ -17,8 +17,8 @@ const controller = {
       res.status(200).send('Question successfully saved.');
     })
     .catch(function(err) {
-      console.log("error saving question:", err);
-      res.status(500).send("Having trouble saving question.");
+      console.log('error saving question:', err);
+      res.status(500).send('Having trouble saving question.');
     });
   },
   
@@ -62,7 +62,7 @@ const controller = {
   },
 
   search: function(req, res) {
-    console.log('inside search: ',req.query);
+    console.log('inside search: ', req.query);
     var term = req.query.term || '';
     db.query('SELECT * FROM questions WHERE question ~ ?', {replacements: [term], model: Question })
     .then(function(questions) {
@@ -71,23 +71,23 @@ const controller = {
         console.log('inside promises:', question);
         return {
           'id': question.id,
-          'title':question.title,
-          'question':question.question,
-          'status':question.status,
+          'title': question.title,
+          'question': question.question,
+          'status': question.status,
           'deadline': '',
-          'userId':question.userId,
+          'userId': question.userId,
           'name': question.name,
           'createdAt': question.createdAt,
           'helperId': question.id_helper
-        }
+        };
       });
       Promise.all(promises).then(function() {
         res.send(promises);
-      })
+      });
     })
     .catch(function(err) {
       console.log('@_@ Error getting questions', err);
-      return res.status(500).send("Having trouble retrieving questions.");
+      return res.status(500).send('Having trouble retrieving questions.');
     });
   },
 
@@ -95,7 +95,7 @@ const controller = {
   retrieveForOneUser: function(req, res, next) {
     var currentUserId = req.query.userId;
     // console.log('Current User Id to Retrieve just that users question', currentUserId);
-    console.log('inside restrieve for one user:', req.query);
+    console.log('inside restrieve2 for one user:', currentUserId);
     QuestionOneUser.findAll({
       where: { userId: currentUserId, status: 'open', },
       order: [['id', 'DESC']],
@@ -118,7 +118,7 @@ const controller = {
       });
     })
     .catch(function(err) {
-      return res.status(500).send("Having trouble retrieving questions.");
+      return res.status(500).send('Having trouble retrieving questions.');
     });
   },
 
@@ -129,7 +129,7 @@ const controller = {
         res.status(200);
       })
       .catch(function(err) {
-        res.status(500).send("Having trouble updating the status");
+        res.status(500).send('Having trouble updating the status');
       });
   }
 

@@ -41,17 +41,23 @@ io.on('connection', function(socket) {
   });
 
   socket.on('exit_room', function(username, room_name) {
-    if (rooms[room_name]) {
-      var index = rooms[room_name].users.indexOf(username);
-      rooms[room_name].users.splice(index, 1);
+    console.log('exit room is being called');
+    if (room_name.charAt(0) === 'D') {
+      socket.leave(room_name);
+      console.log('left the demo room');
     } else {
-      // delete rooms[room_name];
+      if (rooms[room_name]) {
+        var index = rooms[room_name].users.indexOf(username);
+        rooms[room_name].users.splice(index, 1);
+      } else {
+        // delete rooms[room_name];
+      }
+      io.in(room_name).emit('info', 'the other user exit the room');
+      socket.leave(room_name);
+      io.to(socket.id).emit('info', 'You left the room. Live coding is disabled');
+      io.to(socket.id).emit('exit_room');
+      console.log('exit_room', rooms);
     }
-    io.in(room_name).emit('info', 'the other user exit the room');
-    socket.leave(room_name);
-    io.to(socket.id).emit('info', 'You left the room. Live coding is disabled');
-    io.to(socket.id).emit('exit_room');
-    console.log('exit_room', rooms);
   });
 
   socket.on('editor-content-changes', function(room_name, val) {
@@ -93,7 +99,7 @@ io.on('connection', function(socket) {
     console.log('vm: ', sandbox._output);
     /****************************************/
     if (room_name) {
-      console.log('emit to all');
+      console.log('emit to all', room_name, sandbox._output);
       io.in(room_name).emit('submit-val', sandbox._output);     
     } else {
       console.log('emit to self');

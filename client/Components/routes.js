@@ -11,6 +11,7 @@ import PostQuestionPage from './PostQuestionPage'
 import SearchResults from './SearchResults'
 import Signup from './Auth/Signup'
 import Logout from './Auth/Logout'
+import Demo from './Demo'
 
 
 module.exports = (
@@ -27,6 +28,7 @@ module.exports = (
     <Route path="/searchresults" component={SearchResults} />
     <Route path="/signup" component={Signup}/>
     <Route path="/logout" component={Logout}/>
+    <Route path="/demo" component={Demo}/>
 
   </Route>
 );

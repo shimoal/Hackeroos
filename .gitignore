@@ -5,8 +5,6 @@ spec/
 oldPublicFiles/
 redux/
 
-.gitignore
-
 *.log
 
 .DS_store

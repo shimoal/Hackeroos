@@ -38,6 +38,7 @@ export default React.createClass({
             <ul className="nav navbar-nav">
               <li><Link to="/about">How it works</Link></li>
               <li><Link to="/graphs">View coding trends</Link></li>
+              <li><Link to="/demo">Demo</Link></li>
               <li><Link to="/collaborate">Collaborate</Link></li>
               {this.displayDashboardLink()}
               {this.displayLoginLogout()}
