@@ -17,9 +17,7 @@ export default React.createClass({
   },
 
   componentWillMount() {
-    // console.log('Dashboard will mount');
     if (this.props.params.userId !== undefined) { // if public (check React Route params)
-      // console.log('Current public profile id', this.props.params.userId);
       this.props.getUserPublicProfile(this.props.params.userId);
       this.props.getUserPublicQuestions(this.props.params.userId);
     }
@@ -40,31 +38,19 @@ export default React.createClass({
     }
   },
 
-  // componentDidMount() {
-  //   var userId = this.props.userData.user.userId;
-  //   console.log('userId:', this.props.userData);
-
-  //   var data = {
-  //     userId: userId
-  //   };
-
-  //   this.props.getUserQuestions(data);
-  //   this.props.getUserClaimedQuestions(data);
-  // },
-
   publicOrPrivate: function() {
     if (this.props.params.userId !== undefined) { // if public (check React Route params)
       return (
         <div className="container-fluid">
           <div className="row">
-            <LeftColumn userCurrent={this.props.userData.userPublicProfile} />            
+            <LeftColumn userCurrent={this.props.userData.userPublicProfile} 
+              userRating={this.props.userData.ratings[this.props.userData.userPublicProfile.id]} />            
             <RightColumnPublic 
               // dashboard={this.state.dashboard}
               // authenticated={this.props.userData.authenticated} //need to pass this to enable claim button
               userCurrent={this.props.userData.userPublicProfile}
               questions={this.props.userData.userPublicQuestions}
-              authenticated={this.props.userData.authenticated}
-              />
+              authenticated={this.props.userData.authenticated} />
           </div>
         </div>
       );
@@ -73,7 +59,8 @@ export default React.createClass({
         return (
           <div className="container-fluid">
             <div className="row">
-              <LeftColumn userCurrent={this.props.userData.user} />
+              <LeftColumn userCurrent={this.props.userData.user} 
+                userRating={this.props.userData.ratings[this.props.userData.user.id]} />
               <RightColumn 
                 dashboard={this.state.dashboard}
                 userCurrent={this.props.userData.user}

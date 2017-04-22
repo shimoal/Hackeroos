@@ -3,6 +3,7 @@ import { browserHistory, IndexLink } from 'react-router';
 import axios from 'axios';
 import NavLink from './NavLink';
 import style from '../sass/App.scss';
+import Primose from 'bluebird';
 
 //redux experiment
 // import ContainerOne from '../containers/ContainerOne';
@@ -28,6 +29,7 @@ export default class App extends React.Component {
     };
     this.getUserQuestions = this.getUserQuestions.bind(this);
     this.getUserClaimedQuestions = this.getUserClaimedQuestions.bind(this);
+    this.getAllRatings = this.getAllRatings.bind(this);
   }
 
   componentWillMount() {
@@ -66,10 +68,11 @@ export default class App extends React.Component {
     //Get all users
     axios.get('/users')
     .then(response => {
-      // console.log('========== Success getting All Users from DB');
+      console.log('========== Success getting All Users from DB');
       //response.data object is in an array, so need to get element 0
       this.setState({allUsers: response.data});
     })
+    .then(() => this.getAllRatings())
     .catch(err => {
       console.log('Error getting All Users from DB');
       console.log(err);
@@ -233,6 +236,60 @@ export default class App extends React.Component {
     this.setState({user: {}});
   }
 
+  getAllRatings() {
+    var context = this;
+    var ratingPromises = this.state.allUsers.map(user => {
+      return context.getOneRating(user.id);
+    });
+
+    Promise.all(ratingPromises)
+      .then((data) => {
+        data.forEach(ratingsForId => {
+          var copy = Object.assign({}, context.state.ratings);
+          copy[ratingsForId.id] = ratingsForId;
+          context.setState({ratings: copy});
+        }) 
+      });
+  }
+
+  getOneRating(id) {
+    
+    return axios.get('/review-getByUserId/' + id )
+      .then((response) => {
+        var overallTotal = 0;
+        var helpfulnessTotal = 0;
+        var experienceTotal = 0;
+        var knowledgeTotal = 0;
+        
+        var count = 0;
+
+        response.data.forEach(review => {
+          count += 1;
+          overallTotal += review.overall;
+          helpfulnessTotal += review.helpfulness;
+          knowledgeTotal += review.knowledge;
+          experienceTotal += review.experience;
+        });
+
+        var averageOverall = count > 0 ? Math.floor(overallTotal / count) : 0;
+        var averageKnowledge = count > 0 ? Math.floor(knowledgeTotal /count) : 0;
+        var averageHelpfulness = count > 0 ? Math.floor(helpfulnessTotal / count) : 0;
+        var averageExperience = count > 0 ? Math.floor(experienceTotal / count) : 0;
+
+        return {
+          'id': id,
+          'averageOverall': averageOverall,
+          'averageKnowledge': averageKnowledge,
+          'averageHelpfulness': averageHelpfulness,
+          'averageExperience': averageExperience
+        };
+      })
+      .catch(err => {
+        console.log('error in get all reviews for user', err.message)
+      });
+
+  }
+
   render() {
     console.log('inside App render');
     const childrenWithProps = React.Children.map(this.props.children,
@@ -246,7 +303,9 @@ export default class App extends React.Component {
         getUserPublicProfile: this.getUserPublicProfile.bind(this),
         getUserPublicQuestions: this.getUserPublicQuestions.bind(this),
         removeUser: this.removeUser.bind(this),
-        getSearchResults: this.getSearchResults.bind(this)
+        getSearchResults: this.getSearchResults.bind(this),
+        getAllRatings: this.getAllRatings.bind(this),
+        getOneRating: this.getOneRating.bind(this)
       })
     );
     

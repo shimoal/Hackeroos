@@ -55,7 +55,7 @@ export default class Home extends React.Component {
             claimQuestion={this.props.claimQuestion} />
 
           { /* FindHelpers Compoent */}
-          <HelperProfiles allUsers={this.props.userData.allUsers}/>
+          <HelperProfiles allUsers={this.props.userData.allUsers} allRatings={this.props.userData.ratings}/>
 
         </div>
 
