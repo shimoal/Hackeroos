@@ -1,6 +1,8 @@
-var accountSid = 'ACa9a76148f525eea097b29b1c3a888000';
-var authToken = '66b76d4b1a429e89a6551550d5e3d176'; 
-var hackerooPhoneNumber = require('./hiddenConsts').phone_number;
+var twilio_account_data = require('./api_data');
+
+var accountSid = twilio_account_data.account_sid;
+var authToken = twilio_account_data.auth_token; 
+var hackerooPhoneNumber = twilio_account_data.phone_number;
 
 var twilio = require('twilio');
 var client = new twilio(accountSid, authToken);

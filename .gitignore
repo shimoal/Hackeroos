@@ -8,3 +8,5 @@ redux/
 *.log
 
 .DS_store
+
+server/api_data.js
