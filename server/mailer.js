@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const mail_auth = require('api_data');
 
 var mailer = function(emails, roomNum) {
   var receivers = emails.join(', ');
@@ -8,8 +9,8 @@ var mailer = function(emails, roomNum) {
   var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-      user: 'hackerooxyz@gmail.com',
-      pass: 'j90q34njbdaf'
+      user: mail_auth.email_user,
+      pass: mail_auth.email_pass
     }
   });
 
