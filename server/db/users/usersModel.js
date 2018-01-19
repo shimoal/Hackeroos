@@ -19,8 +19,8 @@ const User = db.define('user', {
   },
   description: {
     type: Sequelize.STRING,
-    unigque: true
-  }
+    unique: true
+  },
 });
 
 db.sync()

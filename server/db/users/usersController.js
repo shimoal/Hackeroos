@@ -1,5 +1,6 @@
 const User = require('./usersModel.js');
 const mailer = require('./../../mailer.js');
+const texter = require('./../../texter.js');
 
 const controller = {
 
@@ -12,7 +13,6 @@ const controller = {
     })
     .then(function(task) {
       task.save();
-      // console.log('user saved in database');
       return 'saved';
     })
     .catch(function(err) {
@@ -28,7 +28,6 @@ const controller = {
       }
     })
     .then(function(user) {
-      // console.log('========== Successful retrieving Current User');
       res.json(user);
     })
     .catch(function(err) {
@@ -44,7 +43,6 @@ const controller = {
       }
     })
     .then(function(user) {
-      // console.log('========== Successful retrieving User Public Profile', user);
       res.json(user);
     })
     .catch(function(err) {
@@ -56,8 +54,6 @@ const controller = {
   retrieveAll: function(req, res, next) {
     User.findAll()
     .then(function(users) {
-      // console.log('========== Successful retrieving All User');
-      // console.log('users:', users);
       res.json(users);
     })
     .catch(function(err) {
@@ -67,17 +63,22 @@ const controller = {
   },
 
   sendMail: function(userId1, userId2, roomNum){
-    //need to test this once we have multiple users
     User.findAll({
       where: {
         $or: [{id: userId1}, {id: userId2}]
       }
     }).then(function(users) {
-      // console.log('users from users sendMail:', users );
-      var emails = users.map(function(user) {
-        return user.email;
+      // var emails = users.map(function(user) {
+      //   return user.email;
+      // });
+
+      // mailer(emails, roomNum);
+
+      var phoneNumbers = users.map(function(user) {
+          return user.description;
       });
-      mailer(emails, roomNum);
+
+      texter(roomNum, phoneNumbers);
     }).
     catch(function(err) {
       console.log(err, ' X X X X Error retriving user emails', err);
